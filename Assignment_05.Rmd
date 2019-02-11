@@ -1,0 +1,88 @@
+---
+title: "Assignment_05"
+author: "Stephen Johnson"
+date: "February 5, 2019"
+output: 
+  html_document:
+  keep_md: true
+---
+
+#1. Data Munging
+
+##a. Import the file into R
+```{R echo=TRUE}
+library(tidyr)
+child_names <- read.delim("yob2016.txt", header = FALSE)
+df <- separate(child_names, V1, c("Name", "Sex", "Count"), sep = ";")
+```
+##b. Display the summary and structure of df
+```{R echo=TRUE}
+summary(df)
+str(df)
+```
+##c. ID name misspelled with "yyy"
+```{R echo=TRUE}
+yyySubset <- df[grep("yyy", df$Name),]
+yyySubset
+```
+##d. Remove misspelled observation
+```{R echo=TRUE}
+df$Name <- gsub("yy","",df$Name)
+y2016 <- df
+head(y2016)
+```
+#2. Data Merging
+
+##a. Import the file into R
+```{R echo=TRUE}
+child_names2 <- read.delim("yob2015.txt", header = FALSE)
+y2015 <- separate(child_names2, V1, c("Name", "Sex", "Count"), sep = ",")
+```
+##b. Display the last 10 rows
+```{R echo=TRUE}
+tail(y2016, 10)
+```
+### Names that start with letter Z all Male with 5 count
+
+##c. Merge y2015 and y2016 by Name
+```{R echo=TRUE}
+names2015 <- c("Name", "Sex", "Count2015")
+names2016 <- c("Name", "Sex", "Count2016")
+colnames(y2015) <- names2015
+colnames(y2016) <- names2016
+final <- merge(y2015, y2016, by = c("Name","Sex" ))
+```
+
+#3.  Data Summary
+
+##a. Create a new column for total
+```{R echo=TRUE}
+final$Count2015 <- as.numeric(as.character(final$Count2015))
+final$Count2016 <- as.numeric(as.character(final$Count2016))
+final$total <- final$Count2015 + final$Count2016
+head(final)
+write.csv(final, "final.csv")
+```
+##b. In those two years combined, how many people were given popular names? 
+```{R echo=TRUE}
+print("Number of people who were given popular names are ");sum(final$total)
+```
+##c. Sort the data by total - What are the top 10 most popular names?
+```{R echo=TRUE}
+library(plyr)
+head(arrange(final,desc(total)), n=10)
+```
+##d. Omit boys and provide the top 10 most popular girl's names
+```{R echo=TRUE}
+library(dplyr)
+top10_girlnm <- final %>%  filter(Sex=="F") %>% arrange(desc(total)) %>% head(10)
+head(top10_girlnm)
+```
+##e. Write these top 10 girl names and their Totals to a CSV file
+```{R echo=TRUE}
+write.csv(top10_girlnm, "top10_girlnm.csv", row.names = FALSE)
+```
+
+#6 Codebook
+## Local directory for Homework:  "C:\Users\sj103\OneDrive\Documents\MSDS_Working\Assignment_05"
+## Link to GitHub:  https://github.com/sjohnson1039/MSDS_Assignments
