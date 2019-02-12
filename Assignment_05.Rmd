@@ -85,4 +85,6 @@ write.csv(top10_girlnm, "top10_girlnm.csv", row.names = FALSE)
 
 #6 Codebook
 ## Local directory for Homework:  "C:\Users\sj103\OneDrive\Documents\MSDS_Working\Assignment_05"
-## Link to GitHub:  https://github.com/sjohnson1039/MSDS_Assignments
+## Link to GitHub:  https://github.com/sjohnson1039/Assignment_05
+## Codebooks:
+### codebook_final, codebook_top10_girlnm
